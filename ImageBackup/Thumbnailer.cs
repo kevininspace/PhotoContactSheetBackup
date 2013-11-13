@@ -369,7 +369,7 @@ namespace ImageBackup
                 Graphics graphics = Graphics.FromImage(image);
                 mDetailText = mOptions.DetailText;
                 mDetailText = mDetailText.Replace("[DIRECTORYPATH]", mInfo.DirectoryPath);
-                mDetailText = mDetailText.Replace("[NUMBER_OF_IMAGES]", mInfo.NumberOfFiles.ToString());
+                mDetailText = mDetailText.Replace("[NUMBER_OF_IMAGES]", mThumbCount.ToString());
                 mDetailText = mDetailText.Replace("[DATE]", Convert.ToString(mInfo.Date));
                 
                 //mDetailText = mDetailText.Replace("[ASPECT_RATIO]", mInfo.AspectRatio);
@@ -549,6 +549,9 @@ namespace ImageBackup
             SolidBrush brush = new SolidBrush(Color.FromArgb((int)(mOptions.ShadowIntensity * 2.55f), 0, 0, 0));
             graphics.FillRectangle(brush, 5, 5, mThumbWidth, mThumbHeight);
             brush.Dispose();
+            MagickImage mahd = new MagickImage(shadowTemplate);
+            mahd.Blur();
+            mShadowTemplate = mahd.ToBitmap();
             //IFilter filter = new GaussianBlur();
             //mShadowTemplate = filter.Apply(shadowTemplate);
             graphics.Dispose();

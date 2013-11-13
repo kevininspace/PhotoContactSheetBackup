@@ -90,7 +90,7 @@ namespace ImageBackup
 
                 MediaInfo info = new MediaInfo(lstFilesFound);
                 Options options = new Options();
-                options.DropShadow = true;
+                options.DropShadow = false;
                 options.AutoFitTiles = true;
                 options.Details = true;
                 options.TileHeight = 180;
@@ -103,8 +103,30 @@ namespace ImageBackup
                 //    imagesbmp.Add(magickImage.ToBitmap());
                 //}
                 Thumbnailer thumbnailer = new Thumbnailer(info, options, images);
-                thumbnailer.Result.Save(Path.Combine(info.DirectoryPath, "contact-sheet",".jpg"), ImageFormat.Jpeg);
+
+                // path is your file path
+                //string directory = Path.GetDirectoryName(info.DirectoryPath);
+                string directoryString = CreateDirectoryString(new DirectoryInfo(info.DirectoryPath));
+
+                string path = Path.Combine(info.DirectoryPath, "contact-sheet");
+                thumbnailer.Result.Save(path, ImageFormat.Jpeg);
             }
+        }
+
+        public string CreateDirectoryString(DirectoryInfo directory)
+        {
+            string concatenatedPath = "";
+            string directoryRoot = Directory.GetDirectoryRoot(directory.Name);
+            if (directory.Parent != null && Directory.GetDirectoryRoot(directory.Name) == directory.Parent.Name)
+            {
+                concatenatedPath = directory.Name + "-";
+            }
+            else if (directory.Parent != null && directory.Parent.Exists)
+            {
+                concatenatedPath = CreateDirectoryString(directory.Parent) + "-";
+            }
+            concatenatedPath = concatenatedPath + "-" + directory.Name;
+            return concatenatedPath;
         }
 
         void DirSearch(string sDir)
